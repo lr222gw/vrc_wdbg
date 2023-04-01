@@ -1,0 +1,297 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!641289076 &-7905204752628394911
+AudioBuildInfo:
+  m_IsAudioDisabled: 0
+  m_AudioClipCount: 0
+  m_AudioMixerCount: 0
+--- !u!668709126 &-7869362184734201177
+BuiltAssetBundleInfoSet:
+  bundleInfos:
+  - bundleName: scene-standalonewindows64-debug_world.vrcw
+    bundleArchiveFile: 2
+    packagedFileIndices: 0000000001000000
+  - bundleName: debug_world
+    bundleArchiveFile: 5
+    packagedFileIndices: 04000000
+--- !u!1126 &-5356284701768222087
+PackedAssets:
+  m_File: 4
+  m_ShortPath: CAB-de26d92da3ec449247e704615d7251b3
+  m_Overhead: 4096
+  m_Contents:
+  - fileID: 1
+    classID: 142
+    packedSize: 104
+    offset: 4096
+    sourceAssetGUID: 00000000000000000000000000000000
+    buildTimeAssetPath: AssetBundle Object
+  - fileID: 2
+    classID: 290
+    packedSize: 112
+    offset: 4200
+    sourceAssetGUID: 00000000000000000000000000000000
+    buildTimeAssetPath: 'Built-in AssetBundleManifest: AssetBundleManifest'
+--- !u!1126 &-2214344633925986292
+PackedAssets:
+  m_File: 1
+  m_ShortPath: BuildPlayer-debug_world.sharedAssets
+  m_Overhead: 57763
+  m_Contents:
+  - fileID: 1
+    classID: 150
+    packedSize: 49
+    offset: 58352
+    sourceAssetGUID: 00000000000000000000000000000000
+    buildTimeAssetPath: 
+  - fileID: 2
+    classID: 142
+    packedSize: 152
+    offset: 58408
+    sourceAssetGUID: 00000000000000000000000000000000
+    buildTimeAssetPath: 
+  - fileID: 3
+    classID: 21
+    packedSize: 1052
+    offset: 58560
+    sourceAssetGUID: 0000000000000000f000000000000000
+    buildTimeAssetPath: Resources/unity_builtin_extra
+  - fileID: 4
+    classID: 21
+    packedSize: 252
+    offset: 59616
+    sourceAssetGUID: 0000000000000000f000000000000000
+    buildTimeAssetPath: Resources/unity_builtin_extra
+  - fileID: 5
+    classID: 48
+    packedSize: 23380
+    offset: 59872
+    sourceAssetGUID: 0000000000000000f000000000000000
+    buildTimeAssetPath: Resources/unity_builtin_extra
+  - fileID: 6
+    classID: 48
+    packedSize: 165480
+    offset: 83256
+    sourceAssetGUID: 0000000000000000f000000000000000
+    buildTimeAssetPath: Resources/unity_builtin_extra
+  - fileID: 7
+    classID: 48
+    packedSize: 13452
+    offset: 248736
+    sourceAssetGUID: 0000000000000000f000000000000000
+    buildTimeAssetPath: Resources/unity_builtin_extra
+  - fileID: 8
+    classID: 115
+    packedSize: 100
+    offset: 57728
+    sourceAssetGUID: 661092b4961be7145bfbe56e1e62337b
+    buildTimeAssetPath: Packages/com.vrchat.worlds/Runtime/VRCSDK/Plugins/VRCSDK3.dll
+  - fileID: 9
+    classID: 115
+    packedSize: 96
+    offset: 57832
+    sourceAssetGUID: 4ecd63eff847044b68db9453ce219299
+    buildTimeAssetPath: Packages/com.vrchat.base/Runtime/VRCSDK/Plugins/VRCCore-Editor.dll
+  - fileID: 10
+    classID: 115
+    packedSize: 108
+    offset: 57928
+    sourceAssetGUID: 661092b4961be7145bfbe56e1e62337b
+    buildTimeAssetPath: Packages/com.vrchat.worlds/Runtime/VRCSDK/Plugins/VRCSDK3.dll
+  - fileID: 11
+    classID: 115
+    packedSize: 88
+    offset: 58040
+    sourceAssetGUID: 45115577ef41a5b4ca741ed302693907
+    buildTimeAssetPath: Packages/com.vrchat.worlds/Runtime/Udon/UdonBehaviour.cs
+  - fileID: 12
+    classID: 115
+    packedSize: 128
+    offset: 58128
+    sourceAssetGUID: bf61d954ecb803046953c666facfb904
+    buildTimeAssetPath: Packages/com.vrchat.worlds/Runtime/Udon/ProgramSources/SerializedUdonProgramAsset.cs
+  - fileID: 13
+    classID: 115
+    packedSize: 92
+    offset: 58256
+    sourceAssetGUID: 661092b4961be7145bfbe56e1e62337b
+    buildTimeAssetPath: Packages/com.vrchat.worlds/Runtime/VRCSDK/Plugins/VRCSDK3.dll
+  - fileID: 14
+    classID: 114
+    packedSize: 41616
+    offset: 262192
+    sourceAssetGUID: 08a702afdfcb0f1459e0420dec6c08a7
+    buildTimeAssetPath: Assets/SerializedUdonPrograms/1aa2f0acb7fe07846adfb5861b76a451.asset
+--- !u!1125 &1
+BuildReport:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LastWindowsBuild
+  m_Summary:
+    buildStartTime:
+      serializedVersion: 2
+      ticks: 638159542962967456
+    buildGUID: 00000000000000000000000000000000
+    platformName: Win64
+    platformGroupName: Standalone
+    options: 16
+    assetBundleOptions: 32
+    outputPath: C:/Users/grayf/AppData/Local/Temp/DefaultCompany/debug_world/scene-standalonewindows64-debug_world.vrcw
+    crc: 1337859157
+    totalSize: 125814
+    totalTimeTicks: 357389940
+    totalErrors: 0
+    totalWarnings: 0
+    buildType: 1
+    buildResult: 1
+  m_Files:
+  - path: C:/Users/grayf/AppData/Local/VRChatProjects/debug_world/scene-standalonewindows64-debug_world.vrcw/BuildPlayer-debug_world
+    role: Scene
+    id: 0
+    totalSize: 175996
+  - path: C:/Users/grayf/AppData/Local/VRChatProjects/debug_world/scene-standalonewindows64-debug_world.vrcw/BuildPlayer-debug_world.sharedAssets
+    role: SharedAssets
+    id: 1
+    totalSize: 303808
+  - path: C:/Users/grayf/AppData/Local/VRChatProjects/debug_world/scene-standalonewindows64-debug_world.vrcw
+    role: AssetBundle
+    id: 2
+    totalSize: 122972
+  - path: C:/Users/grayf/AppData/Local/VRChatProjects/debug_world/scene-standalonewindows64-debug_world.vrcw.manifest
+    role: AssetBundleTextManifest
+    id: 3
+    totalSize: 1615
+  - path: C:/Users/grayf/AppData/Local/VRChatProjects/debug_world/debug_world/CAB-de26d92da3ec449247e704615d7251b3
+    role: ResourcesFile
+    id: 4
+    totalSize: 4312
+  - path: C:/Users/grayf/AppData/Local/VRChatProjects/debug_world/debug_world
+    role: ManifestAssetBundle
+    id: 5
+    totalSize: 1057
+  - path: C:/Users/grayf/AppData/Local/VRChatProjects/debug_world/debug_world.manifest
+    role: AssetBundleTextManifest
+    id: 6
+    totalSize: 170
+  m_BuildSteps:
+  - stepName: Build Asset Bundles
+    durationTicks: 357389940
+    depth: 0
+    messages: []
+  - stepName: Calculate asset bundles to be built
+    durationTicks: 42294
+    depth: 1
+    messages: []
+  - stepName: Compile scripts
+    durationTicks: 91525566
+    depth: 1
+    messages: []
+  - stepName: Build player
+    durationTicks: 28530871
+    depth: 1
+    messages: []
+  - stepName: Prepare assets for target platform
+    durationTicks: 2323156
+    depth: 2
+    messages: []
+  - stepName: Building scenes
+    durationTicks: 7601926
+    depth: 2
+    messages: []
+  - stepName: Building scene Assets/debug_world.unity
+    durationTicks: 7572341
+    depth: 3
+    messages: []
+  - stepName: Writing asset files
+    durationTicks: 1143222
+    depth: 2
+    messages: []
+  - stepName: Packaging assets - archive:/BuildPlayer-debug_world/BuildPlayer-debug_world.sharedAssets
+    durationTicks: 1099678
+    depth: 3
+    messages: []
+  - stepName: Creating compressed player package
+    durationTicks: 1928280
+    depth: 2
+    messages: []
+  - stepName: Postprocess built player
+    durationTicks: 109333
+    depth: 2
+    messages: []
+  m_Appendices:
+  - {fileID: -7869362184734201177}
+  - {fileID: -2214344633925986292}
+  - {fileID: 3640314678002581852}
+  - {fileID: -7905204752628394911}
+  - {fileID: -5356284701768222087}
+--- !u!382020655 &3640314678002581852
+PluginBuildInfo:
+  m_RuntimePlugins:
+  - Unity.Burst.Unsafe
+  - VRC.SDK3.Dynamics.PhysBone
+  - OVRPlugin
+  - YamlDotNet
+  - WatsonTcp
+  - System.Threading.Tasks.Extensions
+  - VRC.Udon.ClientBindings
+  - openvr_api
+  - portmidi
+  - VRC.Udon.VRCWrapperModules
+  - VRCSDK3
+  - VRC.Udon.VM
+  - Serilog
+  - nunit.framework
+  - SemanticVersioning
+  - librsync.net
+  - VRC.Udon.Common
+  - VRC.SDK3.Dynamics.Contact
+  - Collections.Pooled
+  - System.Collections.Immutable
+  - System.Numerics.Vectors
+  - System.Buffers
+  - VRC.Dynamics
+  - VRC.Udon.Wrapper
+  - Serilog.Sinks.File
+  - VRC.Udon.Security
+  - clipper_library
+  - VRC.Collections
+  - VRCSDKBase
+  - System.Runtime.CompilerServices.Unsafe
+  - vrc_image_loader
+  - libvrc_image_loader
+  - Newtonsoft.Json
+  - libopenvr_api
+  - Blake2Sharp
+  - System.Memory
+  - System.Text.Encoding.CodePages
+  - VRCCore-Editor
+  - VRC.Utility
+  - AudioPluginOculusSpatializer
+  m_EditorPlugins:
+  - VRCSDK3-Editor
+  - Microsoft.CodeAnalysis
+  - VRC.Udon.VRCTypeResolverModules
+  - AppleEventIntegration
+  - liblz4Plastic
+  - Unity.Plastic.Newtonsoft.Json
+  - unityplastic
+  - VRC.Udon.Compiler
+  - System.Reflection.Metadata
+  - Microsoft.CodeAnalysis.CSharp
+  - VRC.Udon.UAssembly
+  - vpm-core-lib
+  - VRC.Udon.Graph
+  - UnityEditor.VR
+  - 0Harmony
+  - VRC.SDK3.Dynamics.PhysBone.Editor
+  - VRCSDKBase-Editor
+  - VRC.SDK3.Dynamics.Contact.Editor
+  - VRC.Udon.VRCGraphModules
+  - log4netPlastic
+  - VRC.Udon.EditorBindings
+  - zlib64Plastic
+  - Unity.Plastic.Antlr3.Runtime
+  - Serilog.Sinks.Unity3D
+  - lz4x64Plastic

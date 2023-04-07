@@ -23,4 +23,14 @@ MonoBehaviour:
   listenForVRCExceptions: 1
   shouldForceCompile: 1
   watcherMode: 1
-  logWatcherMatchStrings: []
+  logWatcherMatchStrings:
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 

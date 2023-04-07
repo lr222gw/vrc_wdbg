@@ -112,9 +112,16 @@ public class onTrigger_script : UdonSharpBehaviour
             // L_increaseArraySize();
         }
         int freeIndex = findFirstFreeIndex();
-        colliders_busy[freeIndex] = collider.GetInstanceID();
-        nrOfColliders++;
-        RequestSerialization();
+        if(freeIndex != -1)
+        {
+            colliders_busy[freeIndex] = collider.GetInstanceID();
+            nrOfColliders++;
+            RequestSerialization();
+        }
+        else
+        {
+            Debug.LogWarning("## Found no free index");
+        }
     }
     private void L_addCollider(Collider collider)
     {
@@ -132,6 +139,9 @@ public class onTrigger_script : UdonSharpBehaviour
             {
                this.collider_pickup[matchingIndex] = temp; 
             }
+        }else
+        {
+            Debug.LogWarning("## Found no matching collider index");
         }
         
     }
@@ -192,18 +202,29 @@ public class onTrigger_script : UdonSharpBehaviour
     private void G_removeCollider(Collider collider)
     {
         int indexToRemove = findMatchingColliderIndex(collider);
-        colliders_busy[indexToRemove] = -1;
-        //int getIndexOfBusy = findColliderBusyIndex(indexToRemove);
-        nrOfColliders--;
-        RequestSerialization();
+        if(indexToRemove != -1)
+        {
+            colliders_busy[indexToRemove] = -1;
+            //int getIndexOfBusy = findColliderBusyIndex(indexToRemove);
+            nrOfColliders--;
+            RequestSerialization();
+        }
     }
 
     private void L_removeCollider(Collider collider)
     {
         int indexToRemove = findMatchingColliderIndex(collider);
         //int getIndexOfBusy = findColliderBusyIndex(indexToRemove);
-        colliders[indexToRemove] = null;
-        RequestSerialization();
+        if(indexToRemove != -1)
+        {
+            colliders[indexToRemove] = null;
+            RequestSerialization();
+        }
+        else
+        {
+            Debug.LogWarning("## Found no collider to be removed");
+        }
+        
     }
 
 
@@ -286,219 +307,15 @@ public class onTrigger_script : UdonSharpBehaviour
         RequestSerialization();
     }
 
-    VRCPlayerApi[] players;
-    [UdonSynced]
-    private int nrOfPlayers = 0;
-    [UdonSynced]
-    private int nrOfPlayersInside = 0;
-    [UdonSynced]
-    private int nrOfUniquePlayersVisited = 0;
-    [UdonSynced]
-    private int nrOfUniquePlayersVisited_CAP = 0;
-    [UdonSynced]
-    // private int[] playerIDs;
-    private int[] playerIDs_status;
-    [UdonSynced]
-    private int[] playerIDs_HeldStatus;
 
-    private int[] playerID;
-
-    private bool isNewUser(VRCPlayerApi player)
-    {
-        if(player.playerId < nrOfUniquePlayersVisited_CAP)
-        {
-            if(playerIDs_status[player.playerId] == -1)
-            {
-                return true; 
-            }else{
-                return false;
-            }
-
-        }
-        else{
-            return true;
-        }
-    }
-
-    private const int PLAYER_IS_UNDEF   =-1;
-    private const int PLAYER_IS_OFFLINE = 0;
-    private const int PLAYER_IS_OUTSIDE  = 2;
-    private const int PLAYER_IS_INSIDE  = 3;
-    private const int HELD_STATUS_TRUE   = 1;
-    private const int HELD_STATUS_FALSE  = -1;
-    public override void OnPlayerJoined(VRCPlayerApi player)
-    {
-        base.OnPlayerJoined(player);
-
-        if(isNewUser(player))
-        {
-            Debug.Log("was New player");
-            if(nrOfUniquePlayersVisited_CAP >= nrOfUniquePlayersVisited)
-            {
-                nrOfUniquePlayersVisited_CAP += 10;
-                int[] tempArr = new int[nrOfUniquePlayersVisited_CAP];
-                int[] tempArr_h = new int[nrOfUniquePlayersVisited_CAP];
-                for(int i = 0; i < nrOfUniquePlayersVisited; i++)
-                {
-                    tempArr[i] = playerIDs_status[i];
-                    tempArr_h[i] = playerIDs_HeldStatus[i];
-                }
-                for(int i = nrOfUniquePlayersVisited; i < nrOfUniquePlayersVisited_CAP; i++)
-                {
-                    tempArr[i]   = PLAYER_IS_UNDEF;
-                    tempArr_h[i] = HELD_STATUS_FALSE; 
-                }
-                this.playerIDs_status = tempArr;
-                this.playerIDs_HeldStatus = tempArr_h;
-            }            
-            nrOfUniquePlayersVisited++;
-        }
-        this.nrOfPlayers++;
-        this.playerIDs_status[player.playerId]      = PLAYER_IS_OUTSIDE;
-        this.playerIDs_HeldStatus[player.playerId]  = HELD_STATUS_FALSE;
-        RequestSerialization();
-    }
-    public override void OnPlayerLeft(VRCPlayerApi player)
-    {
-        base.OnPlayerLeft(player);
-        this.nrOfPlayers--;
-        this.playerIDs_status[player.playerId] = PLAYER_IS_OFFLINE;
-        this.playerIDs_HeldStatus[player.playerId]  = HELD_STATUS_FALSE;
-
-        RequestSerialization();
-    }
-    public override void OnPlayerTriggerEnter(VRCPlayerApi player)
-    {
-        base.OnPlayerTriggerEnter(player);
-        if(player == Networking.LocalPlayer)
-        {
-            Debug.LogWarning("Player Enter:" + player.playerId.ToString());
-            this.playerIDs_status[player.playerId] = PLAYER_IS_INSIDE;
-            nrOfPlayersInside++;
-            RequestSerialization();
-        }
-    }
-    public override void OnPlayerTriggerExit(VRCPlayerApi player)
-    {
-        base.OnPlayerTriggerExit(player);
-        if(player == Networking.LocalPlayer)
-        {
-            Debug.LogWarning("Player Exit:" + player.playerId.ToString());
-            this.playerIDs_status[player.playerId] = PLAYER_IS_OUTSIDE; //?
-            nrOfPlayersInside--;
-            RequestSerialization();
-        }
-    }
-    public override void OnPlayerTriggerStay(VRCPlayerApi player)
-    {
-        
-    }
-
-
-    public void Update()
-    {        
-        if(Networking.IsOwner(Networking.LocalPlayer, gameObject))
-        {
-            // if(nrOfPlayers != VRCPlayerApi.GetPlayerCount())
-            // {
-            //     this.players      = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
-            //     // this.playerIDs    = new int[VRCPlayerApi.GetPlayerCount()];
-            //     // // this.playerIDs_idx  = new int[VRCPlayerApi.GetPlayerCount()];
-            //     // VRCPlayerApi.GetPlayers(this.players);
-            //     // for(int i = 0; i < VRCPlayerApi.GetPlayerCount();i++)
-            //     // {
-            //     //     this.playerIDs[i]    = this.players[i].playerId;
-            //     //     // this.playerIDs_idx[] =
-            //     // }
-            // }
-            
-            // for(int i = 0; i < players.Length; i++)
-            // {
-                
-                
-            //     if(players[i].GetPickupInHand(VRC_Pickup.PickupHand.None))
-            //     {
-
-            //     }
-            // }
-
-            // for(int i = 0; i < this.colliders.Length; i++ )
-            // {
-            //     if(this.colliders[i] != null)
-            //     {
-            //         for(int j = 0; j < players.Length; j++)
-            //         {
-                        
-            //         }
-            //     }
-            // }
-        }
-        else
-        {
-            Debug.Log("OnUpdate");
-            if(this.playerIDs_status[Networking.LocalPlayer.playerId] == PLAYER_IS_INSIDE)
-            {
-                VRC_Pickup l = Networking.LocalPlayer.GetPickupInHand(VRC_Pickup.PickupHand.Left);
-                VRC_Pickup r = Networking.LocalPlayer.GetPickupInHand(VRC_Pickup.PickupHand.Right);
-                if(l.IsHeld ||r.IsHeld)
-                {
-                    if(this.playerIDs_HeldStatus[Networking.LocalPlayer.playerId] == HELD_STATUS_FALSE)
-                    {
-                        this.playerIDs_HeldStatus[Networking.LocalPlayer.playerId]  = HELD_STATUS_TRUE;
-                        SendCustomNetworkEvent(
-                            VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
-                            nameof(s_updateHeldStatus)
-                        );
-                        RequestSerialization();
-                    }
-                    
-                // }
-                // else if(r.IsHeld)
-                // {
-                    // this.playerIDs_HeldStatus[Networking.LocalPlayer.playerId]  = HELD_STATUS_TRUE;
-                }else 
-                {
-                    if(this.playerIDs_HeldStatus[Networking.LocalPlayer.playerId] == HELD_STATUS_TRUE)
-                    {
-                        this.playerIDs_HeldStatus[Networking.LocalPlayer.playerId]  = HELD_STATUS_FALSE;
-                        SendCustomNetworkEvent(
-                            VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
-                            nameof(s_updateHeldStatus)
-                        );
-                        RequestSerialization();
-                    }
-                    
-                }
-            }
-        }
-    }
-    public void s_updateHeldStatus()
-    {
-        for(int i = 0; i < this.nrOfUniquePlayersVisited; i++)
-        {
-            if(this.playerIDs_status[i] != PLAYER_IS_UNDEF)
-            {
-                if(this.playerIDs_HeldStatus[i] != HELD_STATUS_FALSE)
-                {
-                    for(int j= 0; j < max_nrOfColliders; j++)
-                    {
-                        
-                        if(colliders[j] != null && colliders_busy[j] == -1)
-                        {
-                            colliders[j].attachedRigidbody.detectCollisions = true;
-                            Debug.Log("## removed["+j.ToString()+"]: " + colliders[j].GetInstanceID());
-                            colliders[j] = null;
-                            collider_pickup[j] = null;
-                        }
-                    }
-                }
-            }
-        }
-    }
     public void OnTriggerEnter(Collider other)
     {
         VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
-        
+        if(other.GetComponent<fix_objectSyncPickup>().changeOnDrop)
+        {
+            other.GetComponent<fix_objectSyncPickup>().changeOnDrop = false; 
+            return; 
+        }
 
         if(other_pickup != null)
         {
@@ -506,20 +323,23 @@ public class onTrigger_script : UdonSharpBehaviour
             if(other_pickup.currentPlayer == Networking.LocalPlayer)
             {
                 Debug.Log("## YES WE ARE THE SAME; nrObj:"+this.nrOfColliders.ToString());
-                this.playerIDs_status[Networking.LocalPlayer.playerId] = PLAYER_IS_INSIDE;
                 G_addCollider(other);
                 L_addCollider(other);
                 SendCustomNetworkEvent(
                     VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
                     nameof(s_addColliderFromTemp)
                 );
-            }else if(other_pickup.currentPlayer != null){
+            }
+            else if(other_pickup.currentPlayer != null)
+            {
                 Debug.Log("## NO WE ARE NOT THE SAME; nrObj:"+this.nrOfColliders.ToString());
-                // L_addCollider(other);
                 addTempCollider(other);
-                // other.attachedRigidbody.detectCollisions = false;
-                return; 
-                // box.attachedRigidbody.detectCollisions = false;
+                other.attachedRigidbody.detectCollisions = false;
+                other.GetComponent<fix_objectSyncPickup>().justEntered = true; 
+            }
+            else
+            {
+                addTempCollider(other);
             }
             
         }
@@ -530,26 +350,31 @@ public class onTrigger_script : UdonSharpBehaviour
         );
   
     }
+    
     public void OnTriggerExit(Collider other)
     {
+        if(other.GetComponent<fix_objectSyncPickup>().justEntered)
+        { other.GetComponent<fix_objectSyncPickup>().justEntered = false; return; } 
+
         VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
         if(other_pickup != null)
         {
             
             if(other_pickup.currentPlayer == Networking.LocalPlayer)
             {
-                this.playerIDs_status[Networking.LocalPlayer.playerId] = PLAYER_IS_OUTSIDE;
                 G_removeCollider(other);
                 SendCustomNetworkEvent(
                     VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
                     nameof(s_removeCollider)
                 );
-            }else if(other_pickup.currentPlayer != null){
+            
+            }
+            else if(other_pickup.currentPlayer != null){
                 Debug.Log("## Was AnotherPlayer");
-                return;
+                other.attachedRigidbody.detectCollisions = true;
+                
             }else {
                 Debug.Log("## Use Collisions");
-                other.attachedRigidbody.detectCollisions = true;
             }
             
         }

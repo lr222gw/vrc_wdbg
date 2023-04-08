@@ -62,9 +62,24 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
         {
             Debug.Log("## addCollider!");
             gameObject.GetComponent<Rigidbody>().detectCollisions = true;
-            wasDropped = true;
+            // wasDropped = true;
         }
+        // if(Networking.IsOwner(Networking.LocalPlayer,gameObject))
+        // {
+        //     SendCustomNetworkEvent(
+        //         VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
+        //         nameof(setWasDroppedTrue)
+        //     );
+        // }
 
+    }
+    public void setWasDroppedTrue()
+    {
+        wasDropped = true;
+        SendCustomNetworkEvent(
+            VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
+            nameof(addCollider)
+        );
     }
 
     // public void d_s_removeCollider()
@@ -144,6 +159,31 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
 
     public onTrigger_script myScript = null;
     
+    public bool ignore = false;
+
+    public void _ignoreNoMorePlz()
+    {
+        ignore = false; 
+    }
+    public void _ignoreMePlz()
+    {
+        gameObject.GetComponent<Rigidbody>().detectCollisions = true;
+        ignore = true; 
+        SendCustomEventDelayedSeconds(
+            nameof(_ignoreNoMorePlz),
+            0.5f,
+            VRC.Udon.Common.Enums.EventTiming.LateUpdate
+        );
+    }
+    public void ignoreMePlz()
+    {
+        SendCustomEventDelayedSeconds(
+            nameof(_ignoreMePlz),
+            0.5f,
+            VRC.Udon.Common.Enums.EventTiming.LateUpdate
+        );
+    }
+
     public void ss_triggerEnter()
     {
         Debug.Log("## ss_triggerEnter");
@@ -217,7 +257,7 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
         base.OnDrop();
         SendCustomNetworkEvent(
             VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
-            nameof(addCollider)
+            nameof(setWasDroppedTrue)
         );
     }
 

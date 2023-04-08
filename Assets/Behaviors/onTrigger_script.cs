@@ -337,6 +337,7 @@ public class onTrigger_script : UdonSharpBehaviour
         {
             var f = other.GetComponent<fix_objectSyncPickup>();
             // if(f.wasDropped){Debug.Log("## OnTriggerEnter wasDropped"); return;}
+            if(f.ignore){return;}
             f.myScript = this;
             if(other_pickup.currentPlayer == Networking.LocalPlayer)
             {
@@ -373,7 +374,13 @@ public class onTrigger_script : UdonSharpBehaviour
         {
           
             var f = other.GetComponent<fix_objectSyncPickup>();
-            if(f.wasDropped){Debug.Log("## OnTriggerExit wasDropped");f.s_setWasDroppedFalse();}
+            if(f.ignore){return;}
+            if(f.wasDropped){
+                Debug.Log("## OnTriggerExit wasDropped");
+                f.s_setWasDroppedFalse();
+                f.ignoreMePlz();
+            }
+
             if(other_pickup.currentPlayer == Networking.LocalPlayer)
             {
                 f.ss_triggerExit();

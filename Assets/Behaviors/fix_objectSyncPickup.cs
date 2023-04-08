@@ -35,7 +35,15 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
 
     public void removeCollider()
     {
-        
+        if(gameObject.GetComponent<VRC_Pickup>().currentPlayer == null && isHeld)
+        {
+            Debug.Log("## VRC_Pickup.currentPlayer == null, But is it being held?");
+            SendCustomEventDelayedFrames(nameof(removeCollider),
+            2,
+            VRC.Udon.Common.Enums.EventTiming.LateUpdate);
+            return;
+        }
+
         if( gameObject.GetComponent<VRC_Pickup>().currentPlayer != Networking.LocalPlayer &&
             gameObject.GetComponent<VRC_Pickup>().currentPlayer != null)
         {
@@ -47,6 +55,14 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
     }
     public void addCollider()
     {
+        if(gameObject.GetComponent<VRC_Pickup>().currentPlayer != null && !isHeld) // && isHeld
+        {
+            Debug.Log("## VRC_Pickup.currentPlayer == a player, But Shouldnt!");
+            SendCustomEventDelayedFrames(nameof(addCollider),
+            2,
+            VRC.Udon.Common.Enums.EventTiming.LateUpdate);
+            return;
+        }
         
         if(gameObject.GetComponent<VRC_Pickup>().currentPlayer != Networking.LocalPlayer)
         {
@@ -57,18 +73,28 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
 
     }
 
+    public void d_s_removeCollider()
+    {
+        
+        SendCustomNetworkEvent(
+            VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
+            nameof(s_removeCollider)
+        );   
+    }
     public void s_removeCollider()
     {
-        Debug.Log("Picked up");
+        Debug.Log("## s_Picked up");
         this.justPicked  = true;
         this.pickupReady = true;
+        isHeld = true;
         removeCollider();
     }
     public void s_addCollider()
     {
-        Debug.Log("Dropped ");
+        Debug.Log("## s_Dropped ");
         this.justDropped = true; 
         this.dropReady   = true;
+        isHeld = false;
         addCollider();
     }
 
@@ -79,14 +105,18 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
 
     public bool pickupReady = false; 
     public bool dropReady = false; 
+
+    public bool isHeld = false; 
     
     public override void OnPickup()
     {
         base.OnPickup();
         pickupReady = false;
+        
         // Debug.Log("Picked up");
         // this.justPicked  = true;
         // gameObject.GetComponent<Rigidbody>().detectCollisions = false;
+        
 
         SendCustomNetworkEvent(
             VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
@@ -99,6 +129,7 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
     {
         base.OnDrop();
         dropReady = false;
+        
         // Debug.Log("Dropped ");
         // this.justDropped = true; 
         // gameObject.GetComponent<Rigidbody>().detectCollisions = true;
@@ -107,5 +138,14 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
             VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
             nameof(s_addCollider)
         );  
+    }
+
+    public override void OnPlayerJoined(VRCPlayerApi player)
+    {
+        base.OnPlayerJoined(player);
+        if(player.playerId == Networking.LocalPlayer.playerId)
+        {
+            Debug.Log("## Player joined! : " + player.playerId);
+        }
     }
 }

@@ -31,7 +31,7 @@ public class onTrigger_script : UdonSharpBehaviour
 
     private int[] test {
         set{
-            Debug.Log("WasChanged");
+            Debug.Log("## WasChanged");
             _test = value;
         }
         get => _test;
@@ -344,8 +344,8 @@ public class onTrigger_script : UdonSharpBehaviour
             
         }
         Debug.Log(
-            "## ENTER Triggered     : " + other.GetInstanceID().ToString()  + "\n" + 
-            "## ENTER Player ID     : " + Networking.LocalPlayer.playerId.ToString() + "\n" + 
+            "## ENTER Triggered     : " + other.GetInstanceID().ToString()  + "" + 
+            "## ENTER Player ID     : " + Networking.LocalPlayer.playerId.ToString() + "" + 
             "## ENTER Is Cube Held? : " + other.GetComponent<VRC_Pickup>().IsHeld
         );
   
@@ -380,8 +380,8 @@ public class onTrigger_script : UdonSharpBehaviour
         }
 
         Debug.Log(
-            "## EXIT Triggered     : " + other.GetInstanceID().ToString()  + "\n" + 
-            "## EXIT Player ID     : " + Networking.LocalPlayer.playerId.ToString() + "\n" + 
+            "## EXIT Triggered     : " + other.GetInstanceID().ToString()  + "" + 
+            "## EXIT Player ID     : " + Networking.LocalPlayer.playerId.ToString() + "" + 
             "## EXIT Is Cube Held? : " + other.GetComponent<VRC_Pickup>().IsHeld
             );
     }

@@ -2177,10 +2177,8 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1997031263}
-  justEntered: 0
-  justDropped: 0
-  justPicked: 0
-  wasInside: 0
+  myScript: {fileID: 0}
+  wasDropped: 0
 --- !u!1 &2091705381
 GameObject:
   m_ObjectHideFlags: 0

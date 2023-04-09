@@ -28,28 +28,26 @@ public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
 #if DISKFISK_DEBUG
         Debug.Log("## OnTriggerEnter");
 #endif
+  
 
-        VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
-        
-
-        if(other_pickup != null)
+        if(f.pickup != null)
         {            
-            if(f.isIgnored()){return;}
             f.setTriggerScript(this);
-            if(other_pickup.currentPlayer == Networking.LocalPlayer)
+            if(f.isIgnored()){return;}
+            if(f.pickup.currentPlayer == Networking.LocalPlayer)
             {
                 f.ss_triggerEnter();
             }
             else 
             {
-                if(other_pickup.IsHeld && !f.wasDropped())
+                if(f.pickup.IsHeld && !f.wasDropped())
                 {
 #if DISKFISK_DEBUG
                     Debug.Log("## OnTriggerEnter Was Held");
 #endif                    
                     other.attachedRigidbody.detectCollisions = false;
                 }
-                if(!other_pickup.IsHeld && other_pickup.currentPlayer == null && 
+                if(!f.pickup.IsHeld && f.pickup.currentPlayer == null && 
                     Networking.IsOwner(Networking.LocalPlayer, other.gameObject))
                 {
 #if DISKFISK_DEBUG
@@ -81,8 +79,8 @@ public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
 #if DISKFISK_DEBUG
         Debug.Log("## OnTriggerExit");
 #endif        
-        VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
-        if(other_pickup != null)
+        
+        if(f.pickup != null)
         {          
             if(f.isIgnored()){return;}
             if(f.wasDropped()){
@@ -93,13 +91,13 @@ public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
                 f.ignoreMePlz();
             }
 
-            if(other_pickup.currentPlayer == Networking.LocalPlayer)
+            if(f.pickup.currentPlayer == Networking.LocalPlayer)
             {
                 f.ss_triggerExit();
             }
             else
             {
-                if(!other_pickup.IsHeld && other_pickup.currentPlayer == null && 
+                if(!f.pickup.IsHeld && f.pickup.currentPlayer == null && 
                     Networking.IsOwner(Networking.LocalPlayer, other.gameObject))
                 {
 #if DISKFISK_DEBUG

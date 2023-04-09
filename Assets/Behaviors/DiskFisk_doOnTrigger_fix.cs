@@ -22,6 +22,9 @@ public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        var f = other.GetComponent<DiskFisk_objectSyncPickup_fix>();
+        if(f == null){return;}
+
 #if DISKFISK_DEBUG
         Debug.Log("## OnTriggerEnter");
 #endif
@@ -30,8 +33,7 @@ public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
         
 
         if(other_pickup != null)
-        {
-            var f = other.GetComponent<DiskFisk_objectSyncPickup_fix>();
+        {            
             if(f.isIgnored()){return;}
             f.setTriggerScript(this);
             if(other_pickup.currentPlayer == Networking.LocalPlayer)
@@ -73,14 +75,15 @@ public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
 
     public void OnTriggerExit(Collider other)
     {
+        var f = other.GetComponent<DiskFisk_objectSyncPickup_fix>();
+        if(f == null){return;}
+
 #if DISKFISK_DEBUG
         Debug.Log("## OnTriggerExit");
 #endif        
         VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
         if(other_pickup != null)
-        {
-          
-            var f = other.GetComponent<DiskFisk_objectSyncPickup_fix>();
+        {          
             if(f.isIgnored()){return;}
             if(f.wasDropped()){
 #if DISKFISK_DEBUG

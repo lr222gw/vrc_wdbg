@@ -1,13 +1,19 @@
-﻿#define DISKFISK_DEBUG 
+﻿//#define DISKFISK_DEBUG 
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
+#if !COMPILER_UDONSHARP && UNITY_EDITOR // These using statements must be wrapped in this check to prevent issues on builds
+using UnityEditor;
+using UdonSharpEditor;
+using UnityEditor.Compilation;
+#endif
+
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
 {
-    public void doOnTriggerEnter(Collider other)
+    virtual public void doOnTriggerEnter(Collider other)
     {
 
 #if DISKFISK_DEBUG
@@ -59,7 +65,7 @@ public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
         }
     }
 
-    public void doOnTriggerExit(Collider other)
+    virtual public void doOnTriggerExit(Collider other)
     {
 #if DISKFISK_DEBUG
         Debug.Log(
@@ -109,5 +115,42 @@ public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
             }
         }
     }
+
 }
 
+    // Editor scripts must be wrapped in a UNITY_EDITOR check to prevent issues while uploading worlds. The !COMPILER_UDONSHARP check prevents UdonSharp from throwing errors about unsupported code here.
+#if !COMPILER_UDONSHARP && UNITY_EDITOR 
+    [CustomEditor(typeof(DiskFisk_doOnTrigger_fix))]
+    public class DiskFisk_doOnTrigger_fix_Editor : Editor
+    {
+        private void OnEnable()
+        {
+            
+        }
+
+        
+        
+
+        public override void OnInspectorGUI() 
+        {
+            // // Draws the default convert to UdonBehaviour button, program asset field, sync settings, etc.
+            if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target)) return;
+            serializedObject.Update();
+
+            // Draw the default inspector
+            DrawDefaultInspector();
+
+
+            DiskFisk_doOnTrigger_fix triggerSyncFix = (DiskFisk_doOnTrigger_fix)target;
+
+
+
+            string errorMsg = "## DiskFisk_doOnTrigger_fix is not meant to be used directly as a component!\n## Instead add a UdonBehaviorScript and inherit from DiskFisk_doOnTrigger_fix! \n## Then to use the triggerEnter/Exit functionality just\n## override the \"doOnTriggerEnter/Exit functions!\".\n## Finally add a Collider of choice and enable \"is Trigger\"!";
+            EditorGUILayout.HelpBox(errorMsg, MessageType.Error);
+
+
+
+
+        }
+    }
+#endif

@@ -1,4 +1,4 @@
-﻿#define DISKFISK_DEBUG
+﻿//#define DISKFISK_DEBUG
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;

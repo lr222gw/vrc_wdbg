@@ -5,7 +5,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-public class onTrigger_script : UdonSharpBehaviour
+public class DiskFisk_doOnTrigger_fix : UdonSharpBehaviour
 {
     public void doOnTriggerEnter(Collider other)
     {
@@ -31,7 +31,7 @@ public class onTrigger_script : UdonSharpBehaviour
 
         if(other_pickup != null)
         {
-            var f = other.GetComponent<fix_objectSyncPickup>();
+            var f = other.GetComponent<DiskFisk_objectSyncPickup_fix>();
             if(f.isIgnored()){return;}
             f.setTriggerScript(this);
             if(other_pickup.currentPlayer == Networking.LocalPlayer)
@@ -80,7 +80,7 @@ public class onTrigger_script : UdonSharpBehaviour
         if(other_pickup != null)
         {
           
-            var f = other.GetComponent<fix_objectSyncPickup>();
+            var f = other.GetComponent<DiskFisk_objectSyncPickup_fix>();
             if(f.isIgnored()){return;}
             if(f.wasDropped()){
 #if DISKFISK_DEBUG

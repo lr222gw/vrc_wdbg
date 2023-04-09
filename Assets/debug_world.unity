@@ -1655,7 +1655,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1404448316}
-  temp_max_nrOfColliders: 100
 --- !u!65 &1404448318
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2177,9 +2176,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1997031263}
-  myScript: {fileID: 0}
-  ignore: 0
-  wasDropped: 0
 --- !u!1 &2091705381
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,9 +4,9 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
-public class fix_objectSyncPickup : UdonSharpBehaviour
+public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
 {    
-    private onTrigger_script triggerScript = null;    
+    private DiskFisk_doOnTrigger_fix triggerScript = null;    
     private bool dropped = false;     
     private bool ignore = false;
 
@@ -66,7 +66,7 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
         return this.ignore;
     }
 
-    public void setTriggerScript(onTrigger_script triggerScript)
+    public void setTriggerScript(DiskFisk_doOnTrigger_fix triggerScript)
     {
         this.triggerScript = triggerScript;
     }

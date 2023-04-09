@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
-  m_Name: fix_objectSyncPickup
+  m_Name: DiskFisk_objectSyncPickup_fix
   m_EditorClassIdentifier: 
   serializedUdonProgramAsset: {fileID: 11400000, guid: d530204e4d0051d4c821d783ef079da7,
     type: 2}
@@ -21,7 +21,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 0
   hasInteractEvent: 0
-  scriptID: -2722481434376624012
+  scriptID: -3563922391582524510
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: onTrigger_script, Assembly-CSharp
+      Data: DiskFisk_doOnTrigger_fix, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

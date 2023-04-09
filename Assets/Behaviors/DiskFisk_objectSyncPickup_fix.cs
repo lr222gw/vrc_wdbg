@@ -1,4 +1,4 @@
-﻿//#define DISKFISK_DEBUG
+﻿#define DISKFISK_DEBUG
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -12,6 +12,8 @@ using UnityEditor.Compilation;
 
 public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
 {    
+    public VRC_Pickup pickup = null;
+    public Rigidbody rigid_body = null;
     public Collider objectsCollider = null;
     private DiskFisk_doOnTrigger_fix triggerScript = null;
     private bool dropped = false;     
@@ -24,12 +26,12 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
     public void addCollider()
     {
         
-        if(gameObject.GetComponent<VRC_Pickup>().currentPlayer != Networking.LocalPlayer)
+        if(pickup.currentPlayer != Networking.LocalPlayer)
         {
 #if DISKFISK_DEBUG
             Debug.Log("## addCollider!");
 #endif
-            gameObject.GetComponent<Rigidbody>().detectCollisions = true;
+            rigid_body.detectCollisions = true;
         }
     }
     public void setWasDroppedTrue()
@@ -52,7 +54,7 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
     }
     public void _ignoreMePlz()
     {
-        gameObject.GetComponent<Rigidbody>().detectCollisions = true;
+        rigid_body.detectCollisions = true;
         ignore = true; 
         SendCustomEventDelayedSeconds(
             nameof(_ignoreNoMorePlz),
@@ -96,7 +98,7 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
 #if DISKFISK_DEBUG
             Debug.Log("## s_triggerEnter");
 #endif
-            triggerScript.doOnTriggerEnter(gameObject.GetComponent<Collider>());
+            triggerScript.doOnTriggerEnter(objectsCollider);
         }else{
 #if DISKFISK_DEBUG
             Debug.Log("## s_triggerEnter (TriggerScript was null)");
@@ -121,7 +123,7 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
 #if DISKFISK_DEBUG
             Debug.Log("## s_triggerExit");
 #endif            
-            triggerScript.doOnTriggerExit(gameObject.GetComponent<Collider>());
+            triggerScript.doOnTriggerExit(objectsCollider);
         }else{
 #if DISKFISK_DEBUG
             Debug.Log("## s_triggerExit (TriggerScript was null)");
@@ -162,7 +164,6 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
         base.OnPlayerJoined(player);
         if(player.playerId == Networking.LocalPlayer.playerId)
         {
-            // System.Collections.Queue a;
 #if DISKFISK_DEBUG
             Debug.Log("## Player joined! : " + player.playerId);
 #endif
@@ -180,14 +181,16 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
         {
             DiskFisk_objectSyncPickup_fix objSyncFix = (DiskFisk_objectSyncPickup_fix)target;
             
-            Component vrcPickup = objSyncFix.gameObject.GetComponent<VRC_Pickup>(); 
-            Component vrcObjSync = objSyncFix.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>();
-            
+            objSyncFix.pickup     = objSyncFix.gameObject.GetComponent<VRC_Pickup>(); 
+            objSyncFix.rigid_body = objSyncFix.gameObject.GetComponent<Rigidbody>(); 
 
-            if(vrcPickup == null)
+            if(objSyncFix.pickup == null)
             {
-                objSyncFix.gameObject.AddComponent<VRC.SDK3.Components.VRCPickup>();
+                objSyncFix.pickup     = objSyncFix.gameObject.AddComponent<VRC.SDK3.Components.VRCPickup>();
+                objSyncFix.rigid_body = objSyncFix.GetComponent<Rigidbody>();
             }
+            
+            Component vrcObjSync = objSyncFix.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>();
             if(vrcObjSync == null)
             {
                 objSyncFix.gameObject.AddComponent<VRC.SDK3.Components.VRCObjectSync>();

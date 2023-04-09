@@ -1,4 +1,4 @@
-﻿
+﻿//#define DISKFISK_DEBUG
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -19,7 +19,9 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
         
         if(gameObject.GetComponent<VRC_Pickup>().currentPlayer != Networking.LocalPlayer)
         {
+#if DISKFISK_DEBUG
             Debug.Log("## addCollider!");
+#endif
             gameObject.GetComponent<Rigidbody>().detectCollisions = true;
         }
     }
@@ -36,8 +38,6 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
     {
         return this.dropped;
     }
-
-   
 
     public void _ignoreNoMorePlz()
     {
@@ -73,7 +73,9 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
 
     public void ss_triggerEnter()
     {
+#if DISKFISK_DEBUG
         Debug.Log("## ss_triggerEnter");
+#endif        
         SendCustomNetworkEvent(
             VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
             nameof(s_triggerEnter)
@@ -84,14 +86,22 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
     {
         if(triggerScript != null)
         {
+#if DISKFISK_DEBUG
             Debug.Log("## s_triggerEnter");
+#endif
             triggerScript.doOnTriggerEnter(gameObject.GetComponent<Collider>());
-        }else{Debug.Log("## s_triggerEnter (TriggerScript was null)");}
+        }else{
+#if DISKFISK_DEBUG
+            Debug.Log("## s_triggerEnter (TriggerScript was null)");
+#endif
+        }
     }
 
     public void ss_triggerExit()
     {
+#if DISKFISK_DEBUG
         Debug.Log("## ss_triggerExit");
+#endif        
         SendCustomNetworkEvent(
             VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
             nameof(s_triggerExit)
@@ -101,9 +111,15 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
     {
         if(triggerScript != null)
         {
+#if DISKFISK_DEBUG
             Debug.Log("## s_triggerExit");
+#endif            
             triggerScript.doOnTriggerExit(gameObject.GetComponent<Collider>());
-        }else{Debug.Log("## s_triggerExit (TriggerScript was null)");}
+        }else{
+#if DISKFISK_DEBUG
+            Debug.Log("## s_triggerExit (TriggerScript was null)");
+#endif
+        }
     }
 
     public void setWasDroppedFalse()
@@ -139,7 +155,9 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
         base.OnPlayerJoined(player);
         if(player.playerId == Networking.LocalPlayer.playerId)
         {
+#if DISKFISK_DEBUG
             Debug.Log("## Player joined! : " + player.playerId);
+#endif
         }
     }
 }

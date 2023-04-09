@@ -1,4 +1,4 @@
-﻿
+﻿//#define DISKFISK_DEBUG 
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -10,17 +10,22 @@ public class onTrigger_script : UdonSharpBehaviour
     public void doOnTriggerEnter(Collider other)
     {
 
+#if DISKFISK_DEBUG
         Debug.Log(
             "## ENTER Triggered     : " + other.GetInstanceID().ToString()  + "" + 
             "## ENTER Player ID     : " + Networking.LocalPlayer.playerId.ToString() + "" + 
             "## ENTER Is Cube Held? : " + other.GetComponent<VRC_Pickup>().IsHeld
         );
+#endif
 
     }
 
     public void OnTriggerEnter(Collider other)
     {
+#if DISKFISK_DEBUG
         Debug.Log("## OnTriggerEnter");
+#endif
+
         VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
         
 
@@ -37,13 +42,17 @@ public class onTrigger_script : UdonSharpBehaviour
             {
                 if(other_pickup.IsHeld && !f.wasDropped())
                 {
+#if DISKFISK_DEBUG
                     Debug.Log("## OnTriggerEnter Was Held");
+#endif                    
                     other.attachedRigidbody.detectCollisions = false;
                 }
                 if(!other_pickup.IsHeld && other_pickup.currentPlayer == null && 
                     Networking.IsOwner(Networking.LocalPlayer, other.gameObject))
                 {
+#if DISKFISK_DEBUG
                     Debug.Log("## OnTriggerEnter Thrown into zone");
+#endif                    
                     f.ss_triggerEnter();
                 }
             }
@@ -52,19 +61,21 @@ public class onTrigger_script : UdonSharpBehaviour
 
     public void doOnTriggerExit(Collider other)
     {
-
+#if DISKFISK_DEBUG
         Debug.Log(
             "## EXIT Triggered     : " + other.GetInstanceID().ToString()  + "" + 
             "## EXIT Player ID     : " + Networking.LocalPlayer.playerId.ToString() + "" + 
             "## EXIT Is Cube Held? : " + other.GetComponent<VRC_Pickup>().IsHeld
             );
+#endif
 
     }
 
-    
     public void OnTriggerExit(Collider other)
     {
+#if DISKFISK_DEBUG
         Debug.Log("## OnTriggerExit");
+#endif        
         VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
         if(other_pickup != null)
         {
@@ -72,7 +83,9 @@ public class onTrigger_script : UdonSharpBehaviour
             var f = other.GetComponent<fix_objectSyncPickup>();
             if(f.isIgnored()){return;}
             if(f.wasDropped()){
+#if DISKFISK_DEBUG
                 Debug.Log("## OnTriggerExit wasDropped");
+#endif                
                 f.s_setWasDroppedFalse();
                 f.ignoreMePlz();
             }
@@ -86,7 +99,9 @@ public class onTrigger_script : UdonSharpBehaviour
                 if(!other_pickup.IsHeld && other_pickup.currentPlayer == null && 
                     Networking.IsOwner(Networking.LocalPlayer, other.gameObject))
                 {
+#if DISKFISK_DEBUG
                     Debug.Log("## OnTriggerEnter Thrown out of zone");
+#endif                    
                     f.ss_triggerExit();
                 }
                 return;

@@ -27,15 +27,15 @@ public class onTrigger_script : UdonSharpBehaviour
         if(other_pickup != null)
         {
             var f = other.GetComponent<fix_objectSyncPickup>();
-            if(f.ignore){return;}
-            f.myScript = this;
+            if(f.isIgnored()){return;}
+            f.setTriggerScript(this);
             if(other_pickup.currentPlayer == Networking.LocalPlayer)
             {
                 f.ss_triggerEnter();
             }
             else 
             {
-                if(other_pickup.IsHeld && !f.wasDropped)
+                if(other_pickup.IsHeld && !f.wasDropped())
                 {
                     Debug.Log("## OnTriggerEnter Was Held");
                     other.attachedRigidbody.detectCollisions = false;
@@ -64,8 +64,8 @@ public class onTrigger_script : UdonSharpBehaviour
         {
           
             var f = other.GetComponent<fix_objectSyncPickup>();
-            if(f.ignore){return;}
-            if(f.wasDropped){
+            if(f.isIgnored()){return;}
+            if(f.wasDropped()){
                 Debug.Log("## OnTriggerExit wasDropped");
                 f.s_setWasDroppedFalse();
                 f.ignoreMePlz();

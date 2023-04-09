@@ -5,7 +5,11 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 public class fix_objectSyncPickup : UdonSharpBehaviour
-{
+{    
+    private onTrigger_script triggerScript = null;    
+    private bool dropped = false;     
+    private bool ignore = false;
+
     void Start()
     {
     }
@@ -21,16 +25,19 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
     }
     public void setWasDroppedTrue()
     {
-        wasDropped = true;
+        dropped = true;
         SendCustomNetworkEvent(
             VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
             nameof(addCollider)
         );
     }
 
-    public onTrigger_script myScript = null;
-    
-    public bool ignore = false;
+    public bool wasDropped()
+    {
+        return this.dropped;
+    }
+
+   
 
     public void _ignoreNoMorePlz()
     {
@@ -54,6 +61,10 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
             VRC.Udon.Common.Enums.EventTiming.LateUpdate
         );
     }
+    public bool isIgnored()
+    {
+        return this.ignore;
+    }
 
     public void ss_triggerEnter()
     {
@@ -64,12 +75,17 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
         );
     }
 
+    public void setTriggerScript(onTrigger_script triggerScript)
+    {
+        this.triggerScript = triggerScript;
+    }
+
     public void s_triggerEnter()
     {
-        if(myScript != null)
+        if(triggerScript != null)
         {
             Debug.Log("## s_triggerEnter");
-            myScript.doOnTriggerEnter(gameObject.GetComponent<Collider>());
+            triggerScript.doOnTriggerEnter(gameObject.GetComponent<Collider>());
         }else{Debug.Log("## s_triggerEnter (TriggerScript was null)");}
     }
 
@@ -83,16 +99,16 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
     }
     public void s_triggerExit()
     {
-        if(myScript != null)
+        if(triggerScript != null)
         {
             Debug.Log("## s_triggerExit");
-            myScript.doOnTriggerExit(gameObject.GetComponent<Collider>());
+            triggerScript.doOnTriggerExit(gameObject.GetComponent<Collider>());
         }else{Debug.Log("## s_triggerExit (TriggerScript was null)");}
     }
 
     public void setWasDroppedFalse()
     {
-        this.wasDropped = false;
+        this.dropped = false;
     }
     public void s_setWasDroppedFalse()
     {
@@ -108,7 +124,7 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
 
     }
 
-    public bool wasDropped = false; 
+    
     public override void OnDrop()
     {
         base.OnDrop();

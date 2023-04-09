@@ -66,6 +66,11 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
         return this.ignore;
     }
 
+    public void setTriggerScript(onTrigger_script triggerScript)
+    {
+        this.triggerScript = triggerScript;
+    }
+
     public void ss_triggerEnter()
     {
         Debug.Log("## ss_triggerEnter");
@@ -73,12 +78,7 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
             VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
             nameof(s_triggerEnter)
         );
-    }
-
-    public void setTriggerScript(onTrigger_script triggerScript)
-    {
-        this.triggerScript = triggerScript;
-    }
+    }    
 
     public void s_triggerEnter()
     {

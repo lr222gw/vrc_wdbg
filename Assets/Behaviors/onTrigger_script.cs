@@ -40,6 +40,12 @@ public class onTrigger_script : UdonSharpBehaviour
                     Debug.Log("## OnTriggerEnter Was Held");
                     other.attachedRigidbody.detectCollisions = false;
                 }
+                if(!other_pickup.IsHeld && other_pickup.currentPlayer == null && 
+                    Networking.IsOwner(Networking.LocalPlayer, other.gameObject))
+                {
+                    Debug.Log("## OnTriggerEnter Thrown into zone");
+                    f.ss_triggerEnter();
+                }
             }
         }
     }
@@ -77,6 +83,12 @@ public class onTrigger_script : UdonSharpBehaviour
             }
             else
             {
+                if(!other_pickup.IsHeld && other_pickup.currentPlayer == null && 
+                    Networking.IsOwner(Networking.LocalPlayer, other.gameObject))
+                {
+                    Debug.Log("## OnTriggerEnter Thrown out of zone");
+                    f.ss_triggerExit();
+                }
                 return;
             }
         }

@@ -66,8 +66,11 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
 
     public void s_triggerEnter()
     {
-        Debug.Log("## s_triggerEnter");
-        myScript.doOnTriggerEnter(gameObject.GetComponent<Collider>());
+        if(myScript != null)
+        {
+            Debug.Log("## s_triggerEnter");
+            myScript.doOnTriggerEnter(gameObject.GetComponent<Collider>());
+        }else{Debug.Log("## s_triggerEnter (TriggerScript was null)");}
     }
 
     public void ss_triggerExit()
@@ -80,18 +83,15 @@ public class fix_objectSyncPickup : UdonSharpBehaviour
     }
     public void s_triggerExit()
     {
-        Debug.Log("## s_triggerExit");
-        myScript.doOnTriggerExit(gameObject.GetComponent<Collider>());
+        if(myScript != null)
+        {
+            Debug.Log("## s_triggerExit");
+            myScript.doOnTriggerExit(gameObject.GetComponent<Collider>());
+        }else{Debug.Log("## s_triggerExit (TriggerScript was null)");}
     }
-
-    // public void setWasDroppedFalse_a()
-    // {
-    //     this.wasDropped = false;
-    // }
 
     public void setWasDroppedFalse()
     {
-        // setWasDroppedFalse_a();
         this.wasDropped = false;
     }
     public void s_setWasDroppedFalse()

@@ -15,12 +15,14 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
     public VRC_Pickup pickup = null;
     public Rigidbody rigid_body = null;
     public Collider objectsCollider = null;
-    private DiskFisk_doOnTrigger_fix triggerScript = null;
+    [HideInInspector]
+    public DiskFisk_doOnTrigger_fix triggerScript = null;
     private bool dropped = false;     
     private bool ignore = false;
 
     void Start()
     {
+
     }
 
     public void addCollider()
@@ -103,6 +105,11 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
 #if DISKFISK_DEBUG
             Debug.Log("## s_triggerEnter (TriggerScript was null)");
 #endif
+            SendCustomEventDelayedFrames(
+                nameof(s_triggerEnter),
+                10,
+                VRC.Udon.Common.Enums.EventTiming.LateUpdate
+            );
         }
     }
 
@@ -167,7 +174,47 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
 #if DISKFISK_DEBUG
             Debug.Log("## Player joined! : " + player.playerId);
 #endif
-        }  
+        }
+        
+        // If player joins at roughly the same time, it causes sync problems
+        // To avoid this I force sync by turning it off and then on again after a while
+        // To ensure that no other problems the newly joined player wont be able to  pick
+        // up stuff while this occurs...
+        if(!Networking.IsMaster)
+        {
+            reActivateForNewPlayers();
+        }
+
+    }
+    public void reActivateForNewPlayers()
+    {
+        SendCustomNetworkEvent(
+            VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
+            nameof(forceNewPlayerToRedoObjectSync_disable)
+        );
+    }
+
+    public void forceNewPlayerToRedoObjectSync_disable()
+    {
+        this.gameObject.SetActive(false);
+        gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().enabled = false; 
+        SendCustomNetworkEvent(
+            VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
+            nameof(forceNewPlayerToRedoObjectSync_enable)
+        );
+        
+    }
+    public void forceNewPlayerToRedoObjectSync_enable()
+    {
+        this.gameObject.SetActive(true);
+        gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().FlagDiscontinuity();
+        gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>().enabled = true;        
+    }
+
+    public override void OnDeserialization()
+    {
+        base.OnDeserialization();
+
     }
   
 }
@@ -189,7 +236,7 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
                 objSyncFix.pickup     = objSyncFix.gameObject.AddComponent<VRC.SDK3.Components.VRCPickup>();
                 objSyncFix.rigid_body = objSyncFix.GetComponent<Rigidbody>();
             }
-            
+
             Component vrcObjSync = objSyncFix.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>();
             if(vrcObjSync == null)
             {

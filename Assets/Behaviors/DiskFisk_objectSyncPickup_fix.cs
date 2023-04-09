@@ -4,9 +4,16 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
+#if !COMPILER_UDONSHARP && UNITY_EDITOR // These using statements must be wrapped in this check to prevent issues on builds
+using UnityEditor;
+using UdonSharpEditor;
+using UnityEditor.Compilation;
+#endif
+
 public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
 {    
-    private DiskFisk_doOnTrigger_fix triggerScript = null;    
+    public Collider objectsCollider = null;
+    private DiskFisk_doOnTrigger_fix triggerScript = null;
     private bool dropped = false;     
     private bool ignore = false;
 
@@ -27,7 +34,7 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
     }
     public void setWasDroppedTrue()
     {
-        dropped = true;
+        dropped = true; 
         SendCustomNetworkEvent(
             VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
             nameof(addCollider)
@@ -136,7 +143,7 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
     
     public override void OnPickup()
     {
-        base.OnPickup();
+        base.OnPickup(); 
 
     }
 
@@ -155,9 +162,65 @@ public class DiskFisk_objectSyncPickup_fix : UdonSharpBehaviour
         base.OnPlayerJoined(player);
         if(player.playerId == Networking.LocalPlayer.playerId)
         {
+            // System.Collections.Queue a;
 #if DISKFISK_DEBUG
             Debug.Log("## Player joined! : " + player.playerId);
 #endif
+        }  
+    }
+  
+}
+
+    // Editor scripts must be wrapped in a UNITY_EDITOR check to prevent issues while uploading worlds. The !COMPILER_UDONSHARP check prevents UdonSharp from throwing errors about unsupported code here.
+#if !COMPILER_UDONSHARP && UNITY_EDITOR 
+    [CustomEditor(typeof(DiskFisk_objectSyncPickup_fix))]
+    public class DiskFisk_objectSyncPickup_fix_Editor : Editor
+    {
+        private void OnEnable()
+        {
+            DiskFisk_objectSyncPickup_fix objSyncFix = (DiskFisk_objectSyncPickup_fix)target;
+            
+            Component vrcPickup = objSyncFix.gameObject.GetComponent<VRC_Pickup>(); 
+            Component vrcObjSync = objSyncFix.gameObject.GetComponent<VRC.SDK3.Components.VRCObjectSync>();
+            
+
+            if(vrcPickup == null)
+            {
+                objSyncFix.gameObject.AddComponent<VRC.SDK3.Components.VRCPickup>();
+            }
+            if(vrcObjSync == null)
+            {
+                objSyncFix.gameObject.AddComponent<VRC.SDK3.Components.VRCObjectSync>();
+            }
+            
+        }
+
+        
+        
+
+        public override void OnInspectorGUI() 
+        {
+            // // Draws the default convert to UdonBehaviour button, program asset field, sync settings, etc.
+            if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target)) return;
+            serializedObject.Update();
+
+            // Draw the default inspector
+            DrawDefaultInspector();
+
+
+            DiskFisk_objectSyncPickup_fix objSyncFix = (DiskFisk_objectSyncPickup_fix)target;
+
+            
+            SerializedProperty requiredObjectProperty = serializedObject.FindProperty(nameof(objSyncFix.objectsCollider));
+
+            if (requiredObjectProperty.objectReferenceValue == null)
+            {
+                string errorMsg = "## DiskFisk_objectSyncPickup_fix requires a collider!";
+                EditorGUILayout.HelpBox(errorMsg, MessageType.Error);
+
+            }            
+
+
         }
     }
-}
+#endif

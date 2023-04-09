@@ -7,8 +7,6 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class onTrigger_script : UdonSharpBehaviour
 {
-    // [SerializeField]
-    // private BoxCollider box;
     private Collider[] temp_colliders;
     private VRC_Pickup[] temp_colliderPickup;
     private int temp_nrOfColliders;
@@ -25,7 +23,6 @@ public class onTrigger_script : UdonSharpBehaviour
     private int L_max_nrOfColliders = 10;
 
 
-    // [UdonSynced, FieldChangeCallback(nameof(test))]
     [UdonSynced, FieldChangeCallback(nameof(test))]
     private int[] _test;
 
@@ -109,7 +106,6 @@ public class onTrigger_script : UdonSharpBehaviour
         {
             
             G_increaseArraySize();
-            // L_increaseArraySize();
         }
         int freeIndex = findFirstFreeIndex();
         if(freeIndex != -1)
@@ -205,7 +201,6 @@ public class onTrigger_script : UdonSharpBehaviour
         if(indexToRemove != -1)
         {
             colliders_busy[indexToRemove] = -1;
-            //int getIndexOfBusy = findColliderBusyIndex(indexToRemove);
             nrOfColliders--;
             RequestSerialization();
         }
@@ -214,7 +209,6 @@ public class onTrigger_script : UdonSharpBehaviour
     private void L_removeCollider(Collider collider)
     {
         int indexToRemove = findMatchingColliderIndex(collider);
-        //int getIndexOfBusy = findColliderBusyIndex(indexToRemove);
         if(indexToRemove != -1)
         {
             colliders[indexToRemove] = null;
@@ -336,7 +330,6 @@ public class onTrigger_script : UdonSharpBehaviour
         if(other_pickup != null)
         {
             var f = other.GetComponent<fix_objectSyncPickup>();
-            // if(f.wasDropped){Debug.Log("## OnTriggerEnter wasDropped"); return;}
             if(f.ignore){return;}
             f.myScript = this;
             if(other_pickup.currentPlayer == Networking.LocalPlayer)
@@ -393,148 +386,3 @@ public class onTrigger_script : UdonSharpBehaviour
     }
 }
 
-
-/*
-
-
-    public void OnTriggerEnter(Collider other)
-    {
-        VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
-        
-
-        // if( !other.GetComponent<fix_objectSyncPickup>().transitionIntoEnter &&
-        //     other_pickup.currentPlayer != Networking.LocalPlayer)
-        // {
-        //     return; 
-        // }
-        // if(!other.GetComponent<fix_objectSyncPickup>().ready)
-        // {
-        //     return; 
-        // }
-
-        // if(other.GetComponent<fix_objectSyncPickup>().changeOnDrop)
-        // {
-        //     return; 
-        // }
-
-        if(other_pickup != null)
-        {
-            
-             
-
-            if(other_pickup.currentPlayer == Networking.LocalPlayer)
-            {
-                // if( other.GetComponent<fix_objectSyncPickup>().transitionIntoEnter)
-                // {
-                //     return; 
-                // }
-                if(!other.GetComponent<fix_objectSyncPickup>().transitionIntoEnter)
-                {
-                    Debug.Log("## YES WE ARE THE SAME; nrObj:"+this.nrOfColliders.ToString());
-                    G_addCollider(other);
-                    L_addCollider(other);
-
-                    other.GetComponent<fix_objectSyncPickup>().ss_tempActivateCollider();
-                    return; 
-                }else {
-                    other.GetComponent<fix_objectSyncPickup>().transitionIntoEnter = false; 
-                }
-                // else 
-                // {
-                //     Debug.Log("## THIS SHOULD NEVER BE CALLED? ");
-                //     SendCustomNetworkEvent(
-                //         VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
-                //         nameof(s_addColliderFromTemp)
-                //     );
-                // }
-
-                // SendCustomNetworkEvent(
-                //     VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
-                //     nameof(s_addColliderFromTemp)
-                // );
-            }
-            if(other.GetComponent<fix_objectSyncPickup>().transitionIntoEnter)
-            {
-                // other.GetComponent<fix_objectSyncPickup>().changeOnDrop = false; 
-                if(other_pickup.currentPlayer != null)
-                {
-                    Debug.Log("## NO WE ARE NOT THE SAME; nrObj:"+this.nrOfColliders.ToString());
-                    addTempCollider(other);
-                    s_addColliderFromTemp();
-                    other.attachedRigidbody.detectCollisions = false;
-                    // other.GetComponent<fix_objectSyncPickup>().justEntered = true;
-                }
-
-                return; 
-            }
-            else if(other_pickup.currentPlayer == null)
-            { 
-                Debug.Log("## NO PLAYER IS HOLDING THE THING!");
-                addTempCollider(other);
-            }
-            
-        }
-        Debug.Log(
-            "## ENTER Triggered     : " + other.GetInstanceID().ToString()  + "" + 
-            "## ENTER Player ID     : " + Networking.LocalPlayer.playerId.ToString() + "" + 
-            "## ENTER Is Cube Held? : " + other.GetComponent<VRC_Pickup>().IsHeld
-        );
-  
-    }
-    
-    public void OnTriggerExit(Collider other)
-    {
-
-        // if( other.GetComponent<fix_objectSyncPickup>().transitionIntoEnter 
-        //     //&&    other.GetComponent<VRC_Pickup>().currentPlayer != Networking.LocalPlayer
-        // )
-        // {
-        //     other.GetComponent<fix_objectSyncPickup>().transitionIntoEnter = false; 
-        //     // other.GetComponent<fix_objectSyncPickup>().removeCollider();
-        //     return; 
-        // }
-
-        // if(other.GetComponent<fix_objectSyncPickup>().changeOnDrop)
-        // {
-        //     other.GetComponent<fix_objectSyncPickup>().changeOnDrop = false; 
-        //     return; 
-        // }
-
-        // if(other.GetComponent<fix_objectSyncPickup>().justEntered)
-        // { other.GetComponent<fix_objectSyncPickup>().justEntered = false; return; } 
-
-        VRC_Pickup other_pickup = other.GetComponent<VRC_Pickup>();
-        if(other_pickup != null)
-        {
-            
-            if(other_pickup.currentPlayer == Networking.LocalPlayer)
-            {
-                G_removeCollider(other);
-
-                other.GetComponent<fix_objectSyncPickup>().ss_leavingTrigger();
-
-                SendCustomNetworkEvent(
-                    VRC.Udon.Common.Interfaces.NetworkEventTarget.All,
-                    nameof(s_removeCollider)
-                );
-            
-            }
-            else if(other_pickup.currentPlayer != null){
-                Debug.Log("## Was AnotherPlayer");
-                other.attachedRigidbody.detectCollisions = true;
-                
-            }else {
-                Debug.Log("## Use Collisions");
-            }
-            
-        }
-
-        Debug.Log(
-            "## EXIT Triggered     : " + other.GetInstanceID().ToString()  + "" + 
-            "## EXIT Player ID     : " + Networking.LocalPlayer.playerId.ToString() + "" + 
-            "## EXIT Is Cube Held? : " + other.GetComponent<VRC_Pickup>().IsHeld
-            );
-    }
-
-
-*/
